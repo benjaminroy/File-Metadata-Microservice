@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require("path");
 var multer = require('multer'); // https://www.npmjs.com/package/multer#multer-opts
+var fs = require('fs');
 
 var port = 8080;
 var storage =   multer.diskStorage({
@@ -15,7 +16,6 @@ var storage =   multer.diskStorage({
 var upload = multer({ storage : storage}).single('fileinput');
 
 var app = express();
-
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/bower_components')));
 
@@ -24,6 +24,22 @@ app.get('/', function (req, res) {
 });
 
 app.post('/upload', function (req, res) {
+    fs.readdir(__dirname + '/uploads', function(err, files) {
+        if (err) {
+            console.log(err);
+        } else {
+            files.forEach(function(file) {
+                fs.unlinkSync(__dirname + '/uploads/' + file, function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(file + 'deleted successfully');
+                    }
+                });
+            });
+        }
+    });
+    
     upload(req, res, function(err) {
         if (err || !req.file) {
             console.log("Error uploading file");
