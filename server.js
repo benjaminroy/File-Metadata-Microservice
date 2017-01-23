@@ -43,10 +43,10 @@ app.post('/upload', function (req, res) {
     upload(req, res, function(err) {
         if (err || !req.file) {
             console.log("Error uploading file");
-            res.send("Error uploading file");
+            return res.send("Error uploading file");
         } 
         console.log("File is uploaded");
-        res.send(JSON.stringify({ size : req.file.size }));
+        return res.send(JSON.stringify({ size : req.file.size }));
     });    
 });
 
