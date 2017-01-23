@@ -9,18 +9,14 @@
     
     <body>
         <div class="container">
-            
             <h1 class="page-header">File Metadata Microservice</h1>    
+            <h4>Submit a file to view its filesize.</h4>
             
-            <div class="form-group">
-                <label for="inputFile">Submit a file to view its filesize.</label>
-                <input type="file" class="form-control-file" id="inputFile" aria-describedby="fileHelp">
-            </div>
-            
-            <form method="post" action="/upload">
-                <button class='btn-primary'>Submit</button>
+            <form enctype="multipart/form-data" action="/upload" method="post">
+                <input type="file" name="fileinput" />
+                </br>
+                <input class='btn btn-primary' type="submit" value="Submit" name="submit" />
             </form>
-            
         </div>
     </body>
     

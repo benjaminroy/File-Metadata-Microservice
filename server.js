@@ -1,20 +1,20 @@
 var express = require('express');
 var path = require("path");
-var multer = require('multer');
-var port = 8080;
-var app = express();
+var multer = require('multer'); // https://www.npmjs.com/package/multer#multer-opts
 
+var port = 8080;
 var storage =   multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, './uploads');
+        callback(null, __dirname + '/uploads');
         
     },
     filename: function (req, file, callback) {
-        callback(null,Date.now() + file.originalname);
-        
+        callback(null, Date.now() + file.originalname);
     }
 });
-var upload = multer({ storage : storage}).single('myfile.txt');
+var upload = multer({ storage : storage}).single('fileinput');
+
+var app = express();
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/bower_components')));
@@ -25,17 +25,14 @@ app.get('/', function (req, res) {
 
 app.post('/upload', function (req, res) {
     upload(req, res, function(err) {
-        if (err) {
-            console.log("Error uploading file.");
-            return res.end("Error uploading file.");
-            
-        }
+        if (err || !req.file) {
+            console.log("Error uploading file");
+            res.send("Error uploading file");
+        } 
         console.log("File is uploaded");
-        console.log(req.files);
-        res.end("File is uploaded");
+        res.send(JSON.stringify({ size : req.file.size }));
     });    
 });
-
 
 app.listen(port, function () {
     console.log('App listening on port ' + port.toString() + '...');
